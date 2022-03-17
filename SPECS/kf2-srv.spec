@@ -1,14 +1,20 @@
 %global steamuser steam
 
+%global gh_commit    06ca366eb45a3e56d583c590e84596a67299be87
+%global gh_short     %(c=%{gh_commit}; echo ${c:0:7})
+%global gh_owner     GenZmeY
+%global gh_project   kf2-srv-src
+
 Name:       kf2-srv
-Version:    0.18.1
+Version:    0.19.0
 Release:    1%{dist}
 Summary:    Killing Floor 2 server
 Group:      Amusements/Games
 License:    GNU GPLv3
 BuildArch:  noarch
 
-Source0:    %{name}-%{version}.tar.gz 
+URL:     https://github.com/%{gh_owner}/%{gh_project}
+Source0: https://github.com/%{gh_owner}/%{gh_project}/archive/%{gh_commit}/%{gh_project}-%{version}-%{gh_short}.tar.gz
 
 # test deps
 BuildRequires: systemd
@@ -39,9 +45,10 @@ Provides:   %{name}
 Command line tool for managing a set of Killing Floor 2 servers.
 
 %prep
-%setup -q -c
+%autosetup -n %{gh_project}-%{gh_commit}
 
 %build
+make PREFIX=%{_prefix}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -49,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=%{buildroot} PREFIX=%{_prefix}
 
 %check
-make test DESTDIR=%{buildroot} PREFIX=%{_prefix}
+#make test DESTDIR=%{buildroot} PREFIX=%{_prefix}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -101,6 +108,9 @@ if [[ $1 == 1 ]]; then # Install
 fi
 
 %changelog
+* Thu Mar 17 2022 GenZmeY <genzmey@gmail.com> - 0.19.0-1
+- split source code and src.rpm files.
+
 * Tue Jun 22 2021 GenZmeY <genzmey@gmail.com> - 0.18.1-1
 - fix "FixSteamclientLib" setting.
 

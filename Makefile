@@ -1,22 +1,3 @@
-# kf2-srv is a command line tool for managing a set of Killing Floor 2 servers.
-# Copyright (C) 2019-2021 GenZmeY
-# mailto: genzmey@gmail.com
-# 
-# This file is part of kf2-srv.
-#
-# kf2-srv is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 NAME          := kf2-srv
 
 RPMBUILDDIR   := $$HOME/rpmbuild
@@ -31,8 +12,6 @@ SPECSDIR      := $(WORKDIR)/SPECS
 SRPMSDIR      := $(WORKDIR)/SRPMS
 
 SPEC          := $(SPECSDIR)/$(NAME).spec
-VERSION       := $(shell grep -Fi 'Version:' $(SPEC) | awk '{ print $$2 }')
-SOURCETARBALL := $(SOURCESDIR)/$(NAME)-$(VERSION).tar.gz
 
 .PHONY: all prep rpm srpm activate active check-activate clean-tmp clean-pkg clean builddep test
 
@@ -44,11 +23,7 @@ builddep:
 	dnf builddep -y $(SPEC)
 
 prep: clean-tmp
-	cd $(SOURCESDIR) && tar czf $(SOURCETARBALL) \
-		config     \
-		main       \
-		COPYING    \
-		Makefile
+	spectool -g -R $(SPEC)
 
 rpm: check-activate prep
 	rpmbuild -bb $(SPEC)
@@ -82,7 +57,6 @@ check-activate:
 clean-tmp:
 	rm -rf $(BUILDDIR)
 	rm -rf $(BUILDROOTDIR)
-	rm -f  $(SOURCETARBALL)
 	
 clean-pkg:
 	rm -rf $(RPMSDIR)
