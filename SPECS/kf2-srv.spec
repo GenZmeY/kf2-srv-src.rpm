@@ -56,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=%{buildroot} PREFIX=%{_prefix}
 
 %check
-#make test DESTDIR=%{buildroot} PREFIX=%{_prefix}
+make test DESTDIR=%{buildroot} PREFIX=%{_prefix}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
